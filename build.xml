@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="output" default="runServer" basedir=".">
+<property name="publish_folder" value="C:\Program Files\Zend\Apache2\htdocs\pin" />
+<target name="runServer" >	
+	<echo>Copy Start!</echo>
+	 <mkdir dir="${publish_folder}"/> 
+	 <copy todir="${publish_folder}">
+	 	 <fileset dir="${basedir}"/>
+	 </copy>
+	<echo>Copy End!</echo>
+</target>
+
+</project>
+
