@@ -6,6 +6,9 @@
  */
 require_once 'simple_html_dom.php';
 
+
+
+// Trim user ID
 $userid= trim($_GET['userid']);
 $url = "http://pinterest.com/$userid/";
 $html = file_get_html($url);
