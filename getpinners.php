@@ -5,12 +5,31 @@
 *example: http://localhost/<appname>/getpinners.php?retailerid=direct.asda.com
 */
 require_once 'simple_html_dom.php';
+function getTextBetweenTags($string) {
+	//"totalPages": 7
+	$pattern = "/totalPages\": (\d)/";
+	preg_match($pattern, $string, $matches);
+	if(count($matches)>0){
+		return str_replace('"',"",$matches[0]);
+	}
+	return '';
+}
 $retailerid= trim($_GET['retailerid']);
-
 $url = "http://pinterest.com/source/$retailerid";
 $html = file_get_html($url);
+$totalnumberofpage='';
+foreach($html->find('script') as $e){
+$x=getTextBetweenTags($e);
+if($x!=''){
+	$totalnumberofpage=$x;
+}
+}
+$arr=explode(":",$totalnumberofpage);
+$totalPages= trim($arr[1]);
 
-
+for($i=1;$i<=$totalPages;$i++){
+$url = "http://pinterest.com/source/$retailerid/?page=".$i;
+$html = file_get_html($url);
 foreach($html->find('div[class=pin] div[class=convo] p') as $pinDetails){
 /* Should find a better way to do this. PINs with comments result in additional
  data which we don't need. We get comments inforation as well if we don't check for this.
@@ -27,6 +46,7 @@ foreach($html->find('div[class=pin] div[class=convo] p') as $pinDetails){
 
        }
     
+}
 }
   $json=array("pinners"=>$pinners,"boards"=>$boards,"boardids"=>$boardIDs);  
 /* Remove duplicate pinners fro the $pinners array and duplicate boards from $boards. Not sure how to make array_unique work */        

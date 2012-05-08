@@ -134,6 +134,7 @@ $("#product").text("");
 			$.each(json,function(i,tweet){
 			   $("#product").append('<div id="bd" class="green">'+tweet[0]+'</div>');
 			});
+			//$("#product").append('<ul class="pager"><li class="previous"><a href="#">&larr; Previous</a></li><li class="next"><a href="#">Next &rarr;</a></li></ul>');
 });
 }
 
@@ -146,9 +147,13 @@ function getboards(str){
 	$.each(json,function(i,tweet){
 		   $("#board").append('<div id="bd" class="blue" onclick="getproducts(\''+tweet[1]+'\');">'+tweet[0]+'</div>');
 		});
+	//$("#board").append('<ul class="pager"><li class="previous"><a href="#">&larr; Previous</a></li><li class="next"><a href="#">Next &rarr;</a></li></ul>');
 	});
 	
 }
+
+
+
 
 //getpinners.php
 $(document).ready(function(){
@@ -156,13 +161,18 @@ var url='getpinners.php';
 var query;
 	$('.btn').click(function(){
 		query=$("#input01").val();
+		var dd="http://pinterest.com/source/"+query+"/";
+	//	fetchPage(dd);
+		
 		$("#pinners").html('<img src="assets/img/spinner.gif" alt="Wait" align="middle"/>');
 		$.getJSON(url+'?retailerid='+query,function(json){
 		$("#pinners").text("");		
 		$.each(json.pinners,function(i,tweet){
 			   $("#pinners").append('<div id="bd" class="blue" onclick="getboards(\''+tweet[0]+'\');">'+tweet[0]+'</div>');
 			});
-		});
+
+		//$("#pinners").append('<ul class="pager"><li class="previous"><a href="#">&larr; Previous</a></li><li class="next"><a href="#">Next &rarr;</a></li></ul>');
+				});
 	});
 });
 
