@@ -21,7 +21,7 @@ foreach($html->find('div[class=pin] div[class=convo] p') as $pinDetails){
         $pinnerBoards = $pinDetails->find('a', 1)->innertext;
         $pinnerBoardIDs = $pinDetails->find('a',1)->href;
         
-        $pinners[] = array($pinnerID);
+        $pinners[$pinnerID] = array($pinnerID);
         $boards[] = array($pinnerBoards);
         $boardIDs[] = array($pinnerBoardIDs);
 
