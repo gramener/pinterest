@@ -94,35 +94,33 @@
 	float:left;
 }
       
-    </style>
-    <link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
-
-    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-
-    <!-- Le fav and touch icons -->
-    <link rel="shortcut icon" href="assets/ico/favicon.ico">
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/ico/apple-touch-icon-144-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png">
-    <script src="assets/js/jquery.js"></script>
-    <script src="assets/js/bootstrap-transition.js"></script>
-    <script src="assets/js/bootstrap-alert.js"></script>
-    <script src="assets/js/bootstrap-modal.js"></script>
-    <script src="assets/js/bootstrap-dropdown.js"></script>
-    <script src="assets/js/bootstrap-scrollspy.js"></script>
-    <script src="assets/js/bootstrap-tab.js"></script>
-    <script src="assets/js/bootstrap-tooltip.js"></script>
-    <script src="assets/js/bootstrap-popover.js"></script>
-    <script src="assets/js/bootstrap-button.js"></script>
-    <script src="assets/js/bootstrap-collapse.js"></script>
-    <script src="assets/js/bootstrap-carousel.js"></script>
-    <script src="assets/js/bootstrap-typeahead.js"></script>
-    
+</style>
+<link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+<!-- Le fav and touch icons -->
+<link rel="shortcut icon" href="assets/ico/favicon.ico">
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/ico/apple-touch-icon-144-precomposed.png">
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png">
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png">
+<link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png">
+<script src="assets/js/jquery.js"></script>
+<script src="assets/js/bootstrap-transition.js"></script>
+<script src="assets/js/bootstrap-alert.js"></script>
+<script src="assets/js/bootstrap-modal.js"></script>
+<script src="assets/js/bootstrap-dropdown.js"></script>
+<script src="assets/js/bootstrap-scrollspy.js"></script>
+<script src="assets/js/bootstrap-tab.js"></script>
+<script src="assets/js/bootstrap-tooltip.js"></script>
+<script src="assets/js/bootstrap-popover.js"></script>
+<script src="assets/js/bootstrap-button.js"></script>
+<script src="assets/js/bootstrap-collapse.js"></script>
+<script src="assets/js/bootstrap-carousel.js"></script>
+<script src="assets/js/bootstrap-typeahead.js"></script>
 <script src="assets/jquery.min.js" type="text/javascript"></script>
+<!--  Custom javascript for get pinners,getboards and getproducts -->
 <script type="text/javascript">
 function getproducts(str){
 var arr=str.split('\/');
@@ -134,8 +132,7 @@ $("#product").text("");
 			$.each(json,function(i,tweet){
 			   $("#product").append('<div id="bd" class="green">'+tweet[0]+'</div>');
 			});
-			//$("#product").append('<ul class="pager"><li class="previous"><a href="#">&larr; Previous</a></li><li class="next"><a href="#">Next &rarr;</a></li></ul>');
-});
+		});
 }
 
 function getboards(str){
@@ -147,13 +144,8 @@ function getboards(str){
 	$.each(json,function(i,tweet){
 		   $("#board").append('<div id="bd" class="blue" onclick="getproducts(\''+tweet[1]+'\');">'+tweet[0]+'</div>');
 		});
-	//$("#board").append('<ul class="pager"><li class="previous"><a href="#">&larr; Previous</a></li><li class="next"><a href="#">Next &rarr;</a></li></ul>');
 	});
-	
 }
-
-
-
 
 //getpinners.php
 $(document).ready(function(){
@@ -162,18 +154,25 @@ var query;
 	$('.btn').click(function(){
 		query=$("#input01").val();
 		var dd="http://pinterest.com/source/"+query+"/";
-	//	fetchPage(dd);
-		
 		$("#pinners").html('<img src="assets/img/spinner.gif" alt="Wait" align="middle"/>');
 		$.getJSON(url+'?retailerid='+query,function(json){
 		$("#pinners").text("");		
+		$.each(json.page,function(index,page){
 		$.each(json.pinners,function(i,tweet){
 			   $("#pinners").append('<div id="bd" class="blue" onclick="getboards(\''+tweet[0]+'\');">'+tweet[0]+'</div>');
-			});
-
-		//$("#pinners").append('<ul class="pager"><li class="previous"><a href="#">&larr; Previous</a></li><li class="next"><a href="#">Next &rarr;</a></li></ul>');
+		});
+		for(var i=2;i<=page;i++){
+			$.getJSON(url+'?retailerid='+query+"&page="+i,function(json){
+			$("#pin").html('<img src="assets/img/spinner.gif" alt="Wait" align="middle"/>');
+			$.each(json.pinners,function(i,tweet){
+		    $("#pinners").append('<div id="bd" class="blue" onclick="getboards(\''+tweet[0]+'\');">'+tweet[0]+'</div>');
 				});
+			});	
+		}
+		});
 	});
+	});
+$("#pin").text("");
 });
 
 
@@ -181,7 +180,9 @@ var query;
   </head>
 
   <body>
-
+    
+  
+  
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
@@ -202,7 +203,7 @@ var query;
       </div>
     </div>
 
-    <div class="container">
+<div class="container">
 
 <fieldset>
 <legend>Pintest</legend>
@@ -216,30 +217,55 @@ var query;
 </div>
 </fieldset>
 
-<fieldset>
+
+
+<div class="container-fluid">
+    <div class="row-fluid">
+    <div class="span4">
+   <fieldset>
 <legend>Avaliable Pinners</legend>
 <div id="pinners">
 
 </div>
+<div id="pin">
 
+</div>
 </fieldset>
-
-
-<fieldset>
+    </div>
+    <div class="span4">
+    
+    <fieldset>
 <legend>Avaliable Boards</legend>
 <div id="board">
 
 </div>
 
 </fieldset>
-
-<fieldset>
+    </div>
+    <div class="span4">
+    
+   <fieldset>
 <legend>Product List</legend>
 <div id="product">
 </div>
 
-</fieldset>      
-    </div> <!-- /container -->
+</fieldset> 
+    </div>
+    </div>
+    </div>
+
+
+
+
+
+
+
+     
+    </div> 
+    
+    
+    
+    <!-- /container -->
 
     <!-- Le javascript
     ================================================== -->
