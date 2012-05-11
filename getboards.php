@@ -49,12 +49,25 @@ for($i=1;$i<=$totalPages;$i++){
 	$html = file_get_html($url);
 	
 foreach($html->find('div[class=pinBoard]') as $pin){
-    foreach($pin->find('h3') as $boardname){
-        $rs[] = array(
-            $boardname->plaintext,
-            $boardname->find('a', 0)->href
-        );
-    }
+	foreach($pin->find('h3') as $boardname){
+		if($pin->find('span[class=cover] img',0)==null){
+		$rs[] = array(
+				$boardname->plaintext,
+				$boardname->find('a', 0)->href,
+				'#',
+				$pin->find('h4', 0)->plaintext
+				
+		);
+		}else{
+			$rs[] = array(
+					$boardname->plaintext,
+					$boardname->find('a', 0)->href,
+					$pin->find('span[class=cover] img',0)->src,
+					$pin->find('h4', 0)->plaintext
+					
+			);
+		}
+	}
 }
 }
 header('Content-type: application/json');
