@@ -2,7 +2,7 @@
 /*
  * Author: Jayaseelan Gabriel
  * This is used to find the country name
- * run: getcountryname.php?domain=<DOMAIN NAME>
+ * run: getcountrycode.php?domain=<DOMAIN NAME>
  */
 
 
@@ -18,8 +18,5 @@ if(isset($ini_array['cc'][$countryName])){
 return $ini_array['cc'][$countryName];
 }else{
 	return null;
-	
 }
-
-
 ?>

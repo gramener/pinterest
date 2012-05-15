@@ -4,8 +4,10 @@
 * Run: getproductlist.php?userid=ID&boardname=BOARDNAME
 *example: http://localhost/<appname>/getproductlist.php?userid=rockey_nebhwani&boardname=value-clocks
 */
-require_once 'simple_html_dom.php';
 
+//error_reporting(0);
+require_once 'simple_html_dom.php';
+include_once 'utility.php';
 function getTextBetweenTags($string) {
 	//"totalPages": 7
 	$pattern = "/totalPages\": (\d)/";
@@ -55,9 +57,44 @@ for($i=1;$i<=$totalPages;$i++){
 		$productImageURL=$pin->find('img[class=PinImageImg]',0)->src;
 		$data_id=$pin->getAttribute('data-id'); 
 		//PinImageImg
+		
+		
+		// Added Country code 
+		
+		//$cleanURLs = cleanProductURLs($productURL) . "#" . getcountryCode($productDomain);;
+		$cleanURLs = cleanProductURLs($productURL);
+		/*   echo $productURL . "<br />";
+		 echo $cleanURLs . "<br />"; */
+		if(isset($urls[getcountryCode($productDomain)])){
+		$urls[getcountryCode($productDomain)]= $urls[getcountryCode($productDomain)] ."|" . $cleanURLs;
+		}else{
+			$urls[getcountryCode($productDomain)]=$cleanURLs;
+		}
 		$rs[$ii++]=array($productName,$productDomain,$productURL,$productImageURL,$data_id);
 	}
 }
+
+
+/* Convert URL array in PIPE delimited string. This is needed to pass this to Google API */
+//$urlString = implode('|',$urls);
+/* Google API will return JSON object */
+foreach ($urls as $k=>$v){
+$results= fetchGoogleAPIResults($v,$k);
+}
+//$results = fetchGoogleAPIResults($urlString);
+/* Decode JSON object returned by Google API */
+
+$obj = json_decode($results,true);
+$total_price=0;
+foreach(search($obj, "price") as $price){
+	$total_price=$total_price+$price['price'];
+}
+
+
+$linkArray=search($obj, "link");
+//print_r($linkArray);
+
+
 //header('Content-type: application/json');
 //echo json_encode($rs);
 //print_r($rs); 
@@ -70,6 +107,8 @@ echo "<br>----Product ID: ".$rss->products->product->productId;
 echo "<br>----Num Found: " . $rss->numFound;
 */
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -148,7 +187,7 @@ echo "<br>----Num Found: " . $rss->numFound;
 					
 				</div>
 
-				<div id="BoardStats"> <strong>Products</strong></div>
+				<div id="BoardStats"> <strong>Total price of Products: <?php echo $total_price;?> GBP</strong></div>
 
 				<div id="BoardButton">
 					
@@ -160,6 +199,10 @@ echo "<br>----Num Found: " . $rss->numFound;
 		<div id="ColumnContainer" style="margin-top: 16px;">
         <?php 
         foreach ($rs as $r){
+        	
+        	$tempurl=explode("#",$r[2]);
+        	$productIndividualPrice=getProductPrice($linkArray, $tempurl[0]);
+        	
        	?>
     
     <div class="pin" data-id="<?php echo $r[4];?>" data-width="600" data-height="800">
@@ -176,12 +219,15 @@ echo "<br>----Num Found: " . $rss->numFound;
             </div>
             <a href="/pin/<?php echo $r[4];?>/" class="PinImage ImgLink">
                 	<img src="<?php echo $r[3];?>" alt="Stylish red clock" class="PinImageImg" style="height: 256px;" />
+                	<?php if($productIndividualPrice!=''){?>
+                	<strong class="PriceContainer"><strong class="price"><?php echo $productIndividualPrice;?> GBP</strong></strong>
+                	<?php }?>
             </a>
         </div>
         <p class="description"><?php echo $r[0];?></p>
         <p class="stats colorless">
                 <span class="RepinsCount">
-                1 repin
+                <?php //echo $tempurl[0];?>
                 &nbsp;&nbsp;</span>
             
         </p>
@@ -198,21 +244,21 @@ echo "<br>----Num Found: " . $rss->numFound;
  ?>
 
   
-		</div> <!-- #ColumnContainer -->
+		</div> 
 
 		<div id="fb-root"></div>
 
-		<!-- Paginator -->
+		
 		
 			<a class="MoreGrid Button WhiteButton Button18" href="?page=2" style="display:none"><strong>More Pins</strong><span></span></a>
 		
 
-		<!-- Infinite scroll loading indicator -->
+		
 		
 			<div id="LoadingPins"><img src="http://passets-cdn.pinterest.com/images/BouncingLoader.gif" alt="Pin Loader Image" /><span>Fetching pins&hellip;</span></div>
 		
 
-	</div><!-- #wrapper.BoardLayout -->
+	</div>
 
 </body>
 <script type="text/javascript">
@@ -358,4 +404,4 @@ echo "<br>----Num Found: " . $rss->numFound;
 </script>
 
 
-</html>
+</html> -->
