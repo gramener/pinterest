@@ -1,10 +1,3 @@
-<?php 
-
-header("Location: login.php");
-
-?>
-
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -16,92 +9,10 @@ header("Location: login.php");
 
     <!-- Le styles -->
     <link href="assets/css/bootstrap.css" rel="stylesheet">
-    <style>
-      body {
-        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
-      }
-      
-      #bd {
-	display: inline-block;
-	outline: none;
-	cursor: pointer;
-	text-align: center;
-	text-decoration: none;
-	margin: 1em;
-	font: 14px/100% Arial, Helvetica, sans-serif;
-	padding: .4em 1em .45em;
-	text-shadow: 0 1px 1px rgba(0,0,0,.3);
-	-webkit-border-radius: .5em; 
-	-moz-border-radius: .5em;
-	border-radius: .5em;
-	-webkit-box-shadow: 0 1px 2px rgba(0,0,0,.2);
-	-moz-box-shadow: 0 1px 2px rgba(0,0,0,.2);
-	box-shadow: 0 1px 2px rgba(0,0,0,.2);
-}
-
-#bd:hover {
-	text-decoration: none;
-}
-#bd:active {
-	position: relative;
-	top: 1px;
-}
-
-.green {
-	color: #fff;
-	font-weight:bold;
-	font-size:1em;
-	border: solid 2px #fff;
-	background: #a4c733;
-	background: -webkit-gradient(linear, left top, left bottom, from(#bedf44), to(#a4c733));
-	background: -moz-linear-gradient(top,  #bedf44,  #a4c733);
-	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#bedf44', endColorstr='#a4c733');
-}
-
-.blue {
-	color: #fff;
-	font-weight:bold;
-	font-size:1em;
-	border: solid 2px #fff;
-	background: #2981ad;
-	background: -webkit-gradient(linear, left top, left bottom, from(#4aaacd), to(#2981ad));
-	background: -moz-linear-gradient(top,  #4aaacd,  #2981ad);
-	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#4aaacd', endColorstr='#2981ad');
-}
-
-.blue1 {
-	color: #fff;
-	font-weight:bold;
-	font-size:1em;
-	border: solid 2px #fff;
-	background: #3373c7;
-	background: -webkit-gradient(linear, left top, left bottom, from(#4489de), to(#3373c7));
-	background: -moz-linear-gradient(top,  #4489de,  #3373c7);
-	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#4489de', endColorstr='#3373c7');
-}
-
-.grey {
-	color: #c9c9c9;
-	font-weight:bold;
-	font-size:1em;
-	border: solid 2px #fff;
-	background: #eaeaea;
-	background: -webkit-gradient(linear, left top, left bottom, from(#f3f3f3), to(#eaeaea));
-	background: -moz-linear-gradient(top,  #f3f3f3,  #eaeaea);
-	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#f3f3f3', endColorstr='#eaeaea');
-}
-
-#group_boards{
-	width:100%;
-}
-
-.boards{
-	margin:1em;
-	padding:0.5em;
-	float:left;
-}
-      
-</style>
+   
+    
+   
+   
 <link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
 <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
 <!--[if lt IE 9]>
@@ -128,61 +39,11 @@ header("Location: login.php");
 <script src="assets/js/bootstrap-typeahead.js"></script>
 <script src="assets/jquery.min.js" type="text/javascript"></script>
 <!--  Custom javascript for get pinners,getboards and getproducts -->
-<script type="text/javascript">
-function getproducts(str){
-var arr=str.split('\/');
-var url='getproductlist.php';
-$("#product").text("");
-$("#product").html('<img src="assets/img/spinner.gif" alt="Wait" align="middle" />');
-$.getJSON(url+"?userid="+arr[1]+"&boardname="+arr[2],function(json){
-$("#product").text("");
-			$.each(json,function(i,tweet){
-			   $("#product").append('<div id="bd" class="green">'+tweet[0]+'</div>');
-			});
-		});
+<script>
+function go(){
+	alert("hello");
+	document.facebook.submit();
 }
-
-function getboards(str){
-	var url='getboards.php';
-	$("#product").text("");
-	$("#board").html('<img src="assets/img/spinner.gif" alt="Wait" align="middle"/>');
-	$.getJSON(url+'?userid='+str,function(json){
-	$("#board").text("");		
-	$.each(json,function(i,tweet){
-		   $("#board").append('<div id="bd" class="blue" onclick="getproducts(\''+tweet[1]+'\');">'+tweet[0]+'</div>');
-		});
-	});
-}
-
-//getpinners.php
-$(document).ready(function(){
-var url='getpinners.php';
-var query;
-	$('.btn').click(function(){
-		query=$("#input01").val();
-		var dd="http://pinterest.com/source/"+query+"/";
-		$("#pinners").html('<img src="assets/img/spinner.gif" alt="Wait" align="middle"/>');
-		$.getJSON(url+'?retailerid='+query,function(json){
-		$("#pinners").text("");		
-		$.each(json.page,function(index,page){
-		$.each(json.pinners,function(i,tweet){
-			   $("#pinners").append('<div id="bd" class="blue" onclick="getboards(\''+tweet[0]+'\');">'+tweet[0]+'</div>');
-		});
-		for(var i=2;i<=page;i++){
-			$.getJSON(url+'?retailerid='+query+"&page="+i,function(json){
-			$("#pin").html('<img src="assets/img/spinner.gif" alt="Wait" align="middle"/>');
-			$.each(json.pinners,function(i,tweet){
-		    $("#pinners").append('<div id="bd" class="blue" onclick="getboards(\''+tweet[0]+'\');">'+tweet[0]+'</div>');
-				});
-			});	
-		}
-		});
-	});
-	});
-$("#pin").text("");
-});
-
-
 </script>
   </head>
 
@@ -212,72 +73,71 @@ $("#pin").text("");
 
 <div class="container">
 
-<fieldset>
-<legend>Pintest</legend>
-<div class="control-group">
-<label class="control-label" for="input01">Enter the Retailer Domain</label>
-<div class="controls">
-<input type="text" class="input-xlarge" id="input01">
-<p class="help-block">please enter a valid retailer domain</p>
-</div>
-<button type="submit" class="btn">Submit</button>
-</div>
-</fieldset>
+		<div style="padding-top:60px;">
+		&nbsp;
+		</div>
 
+      <!-- Main hero unit for a primary marketing message or call to action -->
+      
+		<div class="row">
+		<div class="span12" style="text-align: center;">Pinalert.me is an online Price Tracking Service for Pinterest. Relax and enjoy while we find great savings for you !!!</div>
+		</div>     
+		 
+		 <div style="padding-top:10px;">
+		&nbsp;
+		</div>
+		 
+        <div class="row" >
+        <div class="span6">
+        	<h3>Pinalert makes it easy to</h3>
+        	<ul>
+        	<li>Get notified whenever price drops</li>
+        	<li>Find cheaper alternatives elsewhere</li>
+        	<li>Get best deals from retailers</li>
+        	</ul>
+        <button class="btn btn-primary" onclick="go();">Register with Facebook</button>
+        </div>
+        <div class="span6">
+        <form action="facebook.php?code=" method="get" name="facebook">
+        <h3>Start tracking prices right away without registering!</h3>
+        Pinterest ID:<input type="text" class="input-xlarge" id="dd">
+        <br/>
+         <button class="btn btn-primary" onclick="go();">Start Tracking</button>
+         </form>
+        </div>
+        </div>
+      
+      <div style="padding-top:10px;">
+		&nbsp;
+		</div>
+      
 
+      <!-- Example row of columns -->
+      <div class="row">
+        <div class="span4">
+          <h2>Placehoder 1</h2>
+           <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          <p><a class="btn" href="#">View details &raquo;</a></p>
+        </div>
+        <div class="span4">
+          <h2>Placehoder 2</h2>
+           <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          <p><a class="btn" href="#">View details &raquo;</a></p>
+       </div>
+        <div class="span4">
+          <h2>Placehoder 3</h2>
+          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+          <p><a class="btn" href="#">View details &raquo;</a></p>
+        </div>
+      </div>
 
-<div class="container-fluid">
-    <div class="row-fluid">
-    <div class="span4">
-   <fieldset>
-<legend>Avaliable Pinners</legend>
-<div id="pinners">
+      <hr>
 
-</div>
-<div id="pin">
+      <footer>
+        <p>&copy; Company 2012</p>
+      </footer>
 
-</div>
-</fieldset>
     </div>
-    <div class="span4">
     
-    <fieldset>
-<legend>Avaliable Boards</legend>
-<div id="board">
-
-</div>
-
-</fieldset>
-    </div>
-    <div class="span4">
-    
-   <fieldset>
-<legend>Product List</legend>
-<div id="product">
-</div>
-
-</fieldset> 
-    </div>
-    </div>
-    </div>
-
-
-
-
-
-
-
-     
-    </div> 
-    
-    
-    
-    <!-- /container -->
-
-    <!-- Le javascript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-   
-
   </body>
 </html>

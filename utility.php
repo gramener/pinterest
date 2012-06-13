@@ -1,7 +1,25 @@
 <?php
-include_once 'constant.php';
-require_once 'simple_html_dom.php';
 
+require_once 'simple_html_dom.php';
+include_once 'config.php';
+
+
+function ispinterestIdAvailable($pinid){
+	$query="SELECT * FROM `tbl_userdetails` WHERE `pinnerID`='$pinid'";
+	$result=mysql_query($query);
+	if(mysql_num_rows($result)){
+		return true;
+	}else{
+		return false;
+	}
+}
+
+
+function insertRegistrationDetails($pinid,$email,$password){
+	$query= "INSERT INTO tbl_userdetails(pinnerID,registrationDate,alertThreshold,emailID,password)
+			VALUES ( '$pinid', CURRENT_TIMESTAMP , '10', '$email', MD5( '$password' ))";
+	$result=mysql_query($query);
+}
 
 function getcountryCode($domain){
 	/* $url = 'http://trends.google.com/websites?q='.$domain;
@@ -33,6 +51,7 @@ function fetchGoogleAPIResults($urlString,$cc){
 	$apiEndPoint = 'https://www.googleapis.com/shopping/search/v1/public/products?';
 	$format = 'json';
 	$apiCall = $apiEndPoint . 'country=' . $cc . '&restrictBy=link:' . $urlString . '&key=' . $GOOGLE_API_KEY . '&fields=' . $fields . '&alt=' . $format;
+	echo "<br>" . $apiCall;
 	return file_get_contents($apiCall);
 
 }
@@ -41,9 +60,12 @@ function fetchGoogleAPIResults($urlString,$cc){
 function cleanProductURLs($productURL){
 	$urlElementsArray = parse_url($productURL);
 	if(isset($urlElementsArray['query'])){
-	$cleanURL = $urlElementsArray['host'] . $urlElementsArray['path'] . '?' . $urlElementsArray['query'];
+	$cleanURL = $urlElementsArray['host'] . $urlElementsArray['path'] ;
+	
 	}else{
+		
 		$cleanURL = $urlElementsArray['host'] . $urlElementsArray['path'];
+		
 	}
 	/* TODO:str_replace will work only for direct.asda.com URLs. Ideally we need a preg_replace here */
 	$url = str_replace(array(",", "~", ".", "/","?","=","&amp;","(",")"), '+', $cleanURL);
@@ -54,8 +76,7 @@ function getProductPrice($array,$productURL){
 
 	foreach ($array as $tmp){
 	 $tt= explode("?",$tmp['link']);
-	 //echo "-t->" . $tt[0] ."<--<br>";
-	// echo "-p->" .$productURL . "<---<br>";
+	
 	 
 	 if($tt[0]==$productURL){
 	 	return $tmp['inventories'][0]['price'];
@@ -81,6 +102,31 @@ function search($array, $key)
 
 	return $results;
 }
+
+function validateRegistration($pinid,$email,$password){
+	$error=array();
+	
+	if(empty($pinid)){
+		$error[1]=1;
+	}
+	
+	if(empty($email)){
+		$error[2]=2;
+	}
+	elseif(!eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", $email)){
+		$error[3]=3;
+	}
+	if(empty($password)){
+		$error[4]=4;
+	}
+	/* if(ispinterestIdAvailable($pinid)){
+		$error[5]=5;
+	} */
+	
+	return $error;
+	
+}
+
 
 
 ?>

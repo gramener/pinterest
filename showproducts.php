@@ -65,6 +65,8 @@ for($i=1;$i<=$totalPages;$i++){
 		$cleanURLs = cleanProductURLs($productURL);
 		/*   echo $productURL . "<br />";
 		 echo $cleanURLs . "<br />"; */
+		// Created an based on locale. Same locale products were saved in single array element. 
+		
 		if(isset($urls[getcountryCode($productDomain)])){
 		$urls[getcountryCode($productDomain)]= $urls[getcountryCode($productDomain)] ."|" . $cleanURLs;
 		}else{
@@ -184,32 +186,27 @@ echo "<br>----Num Found: " . $rss->numFound;
 					
 						<a href="#/<?php echo $userid;?>/" class="ImgLink"></a>
 						<span id="BoardUserName"><?php echo $userid;?></span>
-					
 				</div>
-
-				<div id="BoardStats"> <strong>Total price of Products: <?php echo $total_price;?> GBP</strong></div>
-
+				<div id="BoardStats"><strong>Total price of Products: <?php echo $total_price;?> GBP</strong></div>
 				<div id="BoardButton">
-					
 				</div>
 			</div><!-- #BoardMeta -->
-
 		</div><!-- #BoardTitle -->
 
 		<div id="ColumnContainer" style="margin-top: 16px;">
         <?php 
         foreach ($rs as $r){
-        	
         	$tempurl=explode("#",$r[2]);
+        	if(count($tempurl)==1){
+        		$tempurl=explode("?",$r[2]);
+        	}
         	$productIndividualPrice=getProductPrice($linkArray, $tempurl[0]);
-        	
-       	?>
-    
+        ?>
+    <?php if($productIndividualPrice!=''){?>
     <div class="pin" data-id="<?php echo $r[4];?>" data-width="600" data-height="800">
         <div class="PinHolder">
             <div class="actions">
                 <div class="right">
-                    
                 </div>
                 <div class="left">
                                <a href="#" class="Button Button11 WhiteButton">
@@ -236,7 +233,7 @@ echo "<br>----Num Found: " . $rss->numFound;
                             <a href="<?php echo $r[2];?>" target="_blank" rel="nofollow"><?php echo $r[1];?></a></p>
         </div>
     </div>
-
+<?php }?>
 
     
 <?php
