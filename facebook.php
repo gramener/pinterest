@@ -1,12 +1,12 @@
 
 <?php
-
+session_start();
 $app_id = "377099469008437";
 $app_secret = "1d8f3a70d89dfc12831837f65a1e518c";
-$my_url = "http://localhost:8011/pin/facebook.php";
+$my_url = "http://localhost/pin/facebook.php";
 
-session_start();
- if(isset($_REQUEST["code"])){
+
+if(isset($_REQUEST["code"])){
  	$code = $_REQUEST["code"];	
 }
 
@@ -28,8 +28,10 @@ if($_SESSION['state'] && ($_SESSION['state'] === $_REQUEST['state'])) {
 	$graph_url = "https://graph.facebook.com/me?access_token="
 	. $params['access_token'];
 	$user = json_decode(file_get_contents($graph_url));
-	print_r($user);
-	echo("Hello " . $user->name);
+	//print_r($user);
+	$_SESSION['fusername']=$user->name;
+	
+	header("Location: registration.php");
 }
 else {
 	echo("The state does not match. You may be a victim of CSRF.");

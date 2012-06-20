@@ -1,6 +1,7 @@
 <?php 
 include_once 'utility.php';
 session_start();
+
 ?>
 
 <?php 
@@ -232,7 +233,17 @@ $("#pin").text("");
     </div>
 
 <div class="container">
-
+	
+	<div class="row">
+	<div class="span12"> <span style="text-align: right;"> Hello 
+	<?php 
+	echo $_SESSION['fusername'];
+	
+	?>
+	</span>
+	</div>
+	</div>
+	
      <div class="row">
     <div class="span12">
       <form class="form-horizontal" action="" method="POST">

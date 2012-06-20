@@ -51,7 +51,7 @@ function fetchGoogleAPIResults($urlString,$cc){
 	$apiEndPoint = 'https://www.googleapis.com/shopping/search/v1/public/products?';
 	$format = 'json';
 	$apiCall = $apiEndPoint . 'country=' . $cc . '&restrictBy=link:' . $urlString . '&key=' . $GOOGLE_API_KEY . '&fields=' . $fields . '&alt=' . $format;
-	echo "<br>" . $apiCall;
+	
 	return file_get_contents($apiCall);
 
 }
