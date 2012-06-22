@@ -15,9 +15,15 @@ function getTextBetweenTags($string) {
 	return '';
 }
 
+
 // End
 // Trim user ID
+if(isset($_SESSION['pinid'])){
 $userid= trim($_SESSION['pinid']);
+}else{
+	$userid=trim($_REQUEST['pinid']);
+}
+
 $url = "http://pinterest.com/$userid/";
 // Code for get all boards
 $html = file_get_html($url);

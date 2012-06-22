@@ -92,11 +92,11 @@
         <button class="btn btn-primary" onclick="go();">Register with Facebook</button>
         </div>
         <div class="span6">
-        <form action="facebook.php?code=" method="get" name="facebook">
+        <form action="showboards.php" method="get" name="facebook">
         <h3>Start tracking prices right away without registering!</h3>
-        Pinterest ID:<input type="text" class="input-xlarge" id="dd">
+        Pinterest ID:<input type="text" name="pinid" class="input-xlarge" id="dd">
         <br/>
-         <button class="btn btn-primary" onclick="go();">Start Tracking</button>
+         <button class="btn btn-primary">Start Tracking</button>
          </form>
         </div>
         </div>

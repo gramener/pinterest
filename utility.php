@@ -22,7 +22,7 @@ function insertRegistrationDetails($pinid,$email,$password){
 }
 
 function getcountryCode($domain){
-	/* $url = 'http://trends.google.com/websites?q='.$domain;
+	 $url = 'http://trends.google.com/websites?q='.$domain;
 	// Code for get all boards
 	
 	$html = file_get_html($url);
@@ -33,8 +33,8 @@ function getcountryCode($domain){
 	}else{
 		return null;
 	
-	} */
-	return "GB";
+	} 
+	//return "GB";
 }
 
 

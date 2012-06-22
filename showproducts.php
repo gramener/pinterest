@@ -8,6 +8,7 @@
 //error_reporting(0);
 require_once 'simple_html_dom.php';
 include_once 'utility.php';
+
 function getTextBetweenTags($string) {
 	//"totalPages": 7
 	$pattern = "/totalPages\": (\d)/";
@@ -20,7 +21,7 @@ function getTextBetweenTags($string) {
 
 $id=trim($_GET['id']);
 $explodeArray=explode("/", $id);
-//print_r($explodeArray);
+
 $userid= $explodeArray[1];
 $boardname=$explodeArray[2];
 $url = "http://pinterest.com/$userid/$boardname/";

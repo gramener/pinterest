@@ -1,11 +1,8 @@
-
 <?php
 session_start();
 $app_id = "377099469008437";
 $app_secret = "1d8f3a70d89dfc12831837f65a1e518c";
 $my_url = "http://localhost/pin/facebook.php";
-
-
 if(isset($_REQUEST["code"])){
  	$code = $_REQUEST["code"];	
 }
