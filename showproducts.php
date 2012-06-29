@@ -1,10 +1,10 @@
 <?php
+session_start();
 /*
  * author: Jayaseelan Gabriel
 * Run: getproductlist.php?userid=ID&boardname=BOARDNAME
 *example: http://localhost/<appname>/getproductlist.php?userid=rockey_nebhwani&boardname=value-clocks
 */
-
 //error_reporting(0);
 require_once 'simple_html_dom.php';
 include_once 'utility.php';
@@ -21,9 +21,12 @@ function getTextBetweenTags($string) {
 
 $id=trim($_GET['id']);
 $explodeArray=explode("/", $id);
-
 $userid= $explodeArray[1];
 $boardname=$explodeArray[2];
+
+// Get pins from local database
+$pinsArray=getPinsByPinnerId($userid);
+
 $url = "http://pinterest.com/$userid/$boardname/";
 $html = file_get_html($url);
 $totalnumberofpage='';
@@ -48,6 +51,7 @@ $productDomain='';
 $productImageURL='';
 $data_id='';
 $ii=0;
+
 for($i=1;$i<=$totalPages;$i++){
 	$url = "http://pinterest.com/$userid/$boardname/?page=".$i;
 	$html = file_get_html($url);
@@ -64,8 +68,7 @@ for($i=1;$i<=$totalPages;$i++){
 		
 		//$cleanURLs = cleanProductURLs($productURL) . "#" . getcountryCode($productDomain);;
 		$cleanURLs = cleanProductURLs($productURL);
-		/*   echo $productURL . "<br />";
-		 echo $cleanURLs . "<br />"; */
+		
 		// Created an based on locale. Same locale products were saved in single array element. 
 		
 		if(isset($urls[getcountryCode($productDomain)])){
@@ -88,6 +91,8 @@ $results= fetchGoogleAPIResults($v,$k);
 /* Decode JSON object returned by Google API */
 
 $obj = json_decode($results,true);
+
+
 $total_price=0;
 foreach(search($obj, "price") as $price){
 	$total_price=$total_price+$price['price'];
@@ -134,15 +139,11 @@ echo "<br>----Num Found: " . $rss->numFound;
 	
 
 <div id="Header">
-    <div class="LiquidContainer HeaderContainer">
-        
+<div class="LiquidContainer HeaderContainer">
 <a href="/" id="Pinterest"><img src="http://passets-cdn.pinterest.com/images/LogoRed.png" width="100" height="26" alt="Pinterest Logo" /></a>
-
-
+<!-- top level Menu -->
 <ul id="Navigation">
-    
-    
-    <li>
+	<li>
         <a href="/about/" class="nav">About<span></span></a>
         <ul>
             <li><a href="/about/help/">Help</a></li>
@@ -152,58 +153,61 @@ echo "<br>----Num Found: " . $rss->numFound;
             <li><a href="/about/trademark/">Trademark</a></li>
         </ul>
     </li>
-    
-        <li><a href="#" class="nav LoginNav">Login</a></li>
-    
+    <li>
+    <?php if(isset($_SESSION['auth'])){?>
+    <a href="logout.php" class="nav LoginNav">Logout</a>
+    <?php }?>
+    </li>
 </ul>
-
-
-
- 
-
-    </div>
+</div>
 </div>
 
 	
 
-	<div id="wrapper" class="BoardLayout">
+<div id="wrapper" class="BoardLayout">
 
-	
-	    
-		    <script type="text/javascript">
+<script type="text/javascript">
     $(document).ready(function() {
         Nag.setup('UnauthCallout');
     });
 </script>
 
-		
-    
+<div id="BoardTitle">
+	<h1 class="serif"><strong><?php echo $boardname;?><span id="BoardLikeButton"></span></strong></h1>
+		<div id="BoardMeta">
+			<div id="BoardUsers">
+				<a href="#/<?php echo $userid;?>/" class="ImgLink"></a>
+				<span id="BoardUserName"><?php echo $userid;?></span>
+			</div>
+			<div id="BoardStats"><strong>Total price of Products: <?php echo $total_price;?> GBP</strong>
+			</div>
+			<div id="BoardButton">
+			</div>
+		</div><!-- #BoardMeta -->
+</div><!-- #BoardTitle -->
 
-		<div id="BoardTitle">
-			<h1 class="serif"><strong>Value Clocks<span id="BoardLikeButton"><fb:like href="http://pinterest.com/rockey_nebhwani/value-clocks/" layout="button_count" show_faces="false" width="90" action="like" font="lucida grande" colorscheme="light"></fb:like></span></strong></h1>
+<div id="ColumnContainer" style="margin-top: 16px;">
+<?php 
+
+
+
+	foreach ($rs as $r){
+       	$tempurl=explode("#",$r[2]);
+       	
+       	
+       	
+       	if(count($tempurl)==1){
+       		$tempurl=explode("?",$r[2]);
+       	}
+       	
+
+       	
+       	$productIndividualPrice=getProductPrice($linkArray, $tempurl[0]);
+
+		if($productIndividualPrice!=''){
 			
-			<div id="BoardMeta">
-				<div id="BoardUsers">
-					
-						<a href="#/<?php echo $userid;?>/" class="ImgLink"></a>
-						<span id="BoardUserName"><?php echo $userid;?></span>
-				</div>
-				<div id="BoardStats"><strong>Total price of Products: <?php echo $total_price;?> GBP</strong></div>
-				<div id="BoardButton">
-				</div>
-			</div><!-- #BoardMeta -->
-		</div><!-- #BoardTitle -->
-
-		<div id="ColumnContainer" style="margin-top: 16px;">
-        <?php 
-        foreach ($rs as $r){
-        	$tempurl=explode("#",$r[2]);
-        	if(count($tempurl)==1){
-        		$tempurl=explode("?",$r[2]);
-        	}
-        	$productIndividualPrice=getProductPrice($linkArray, $tempurl[0]);
-        ?>
-    <?php if($productIndividualPrice!=''){?>
+?>
+	<form action="showindividualProduct.php" method="get">
     <div class="pin" data-id="<?php echo $r[4];?>" data-width="600" data-height="800">
         <div class="PinHolder">
             <div class="actions">
@@ -211,7 +215,13 @@ echo "<br>----Num Found: " . $rss->numFound;
                 </div>
                 <div class="left">
                                <a href="#" class="Button Button11 WhiteButton">
-                                    <strong><em></em>Add to Alert</strong><span></span>
+                               <?php if(array_key_exists($r[4], $pinsArray)){?>
+                               <input type="submit" name="rfa" value="Remove from alert">
+                               <?php }else{?>
+                               <input type="submit" name="ata" value="Add to alert">
+                               <?php }?>
+                                
+                                 
                                 </a>
                 </div>
             </div>
@@ -234,75 +244,54 @@ echo "<br>----Num Found: " . $rss->numFound;
                             <a href="<?php echo $r[2];?>" target="_blank" rel="nofollow"><?php echo $r[1];?></a></p>
         </div>
     </div>
+    
+    <input type="hidden" name="pinid" value="<?php echo $r[4];?>">
+    <input type="hidden" name="pinnerId" value="<?php echo $userid;?>">
+    <input type="hidden" name="id" value="<?php echo $id;?>">
+    <input type="hidden" name="currentPrice" value="<?php echo $productIndividualPrice;?>" />
+    <input type="hidden" name="productURL" value="<?php echo$r[2]; ?>">
+    </form>
+    
 <?php }?>
 
     
 <?php
  }
  ?>
+</div> 
 
-  
-		</div> 
-
-		<div id="fb-root"></div>
-
-		
-		
-			<a class="MoreGrid Button WhiteButton Button18" href="?page=2" style="display:none"><strong>More Pins</strong><span></span></a>
-		
-
-		
-		
-			<div id="LoadingPins"><img src="http://passets-cdn.pinterest.com/images/BouncingLoader.gif" alt="Pin Loader Image" /><span>Fetching pins&hellip;</span></div>
-		
-
-	</div>
-
+<div id="fb-root"></div>
+<a class="MoreGrid Button WhiteButton Button18" href="?page=2" style="display:none"><strong>More Pins</strong><span></span></a>
+<div id="LoadingPins"><img src="http://passets-cdn.pinterest.com/images/BouncingLoader.gif" alt="Pin Loader Image" /><span>Fetching pins&hellip;</span></div>
+</div>
 </body>
+
 <script type="text/javascript">
-
     var board = 56084026548592326;
-
     BoardLayout.setup();
-
     $.pageless.settings.complete = function() {
-        
             if ($.pageless.settings.currentPage == 10) {
                 $(".MoreGrid").css('display', 'block');
             }
-        
-
         BoardLayout.newPins();
     };
-
     $(document).ready(function() {
-
         // Show user / collaborator names on :hover
         $('.collaborator').tipsy();
-
         $('#ColumnContainer').pageless({
             "totalPages": 1,
             "currentPage": 1,
             "loader": "LoadingPins",
             "distance": 3000
         });
-
         if (50 > 8) {
             $('#LoadingPins').hide();
         }
-
-        
-
-        
-
         // Prevent click-jacking
         if (top != self) {
             $('body').html('<h1>Unauthorized</h1>')
         }
-
-        
     });
-
 </script>
 <script type="text/javascript">
     window.fbAsyncInit = function() {
@@ -320,52 +309,32 @@ echo "<br>----Num Found: " . $rss->numFound;
         document.getElementById('fb-root').appendChild(e);
     } ());
 </script>
-
     <div id="SearchAutocompleteHolder"></div>
     <script type="text/javascript">
     function trackGAEvent(category, action, label, value) {
     _gaq = _gaq || []
-
-
         // Event
     _gaq.push(['_trackEvent', category, action, label, value]);
-
     // Virtual Page
-        virtual_page = '_event_';
+    virtual_page = '_event_';
     virtual_page += "/" + category;
-
     if(!action) action = '_';
         virtual_page+="/" + action;
     if(label) virtual_page+= "/" + label;
-
     _gaq.push(['_trackPageview', virtual_page]);
-
-        
     }
-
     var _gaq = _gaq || [];
     _gaq.push(['_setAccount', 'UA-12967896-1']);
     _gaq.push(['_setCustomVar', 1, 'is_logged_in', 'logged out', 2]);
     _gaq.push(['_setCustomVar', 2, 'page_name', 'board', 1]);
-
-    
-
-    
-    
-        trackGAEvent('board_view', 'viewed');
-        _gaq.push(['_trackPageview', '/board/?name=Value Clocks']);
-    
-
+     trackGAEvent('board_view', 'viewed');
+    _gaq.push(['_trackPageview', '/board/?name=Value Clocks']);
     (function() {
       var ga = document.createElement('script'); ga.type='text/javascript'; ga.async=true;
       ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
       (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ga);
     })();
-
 </script>
-
-
-    
 <script type="text/javascript">
     var autoLoginFbook = function(response) {
         if (response.status !== 'connected') {
@@ -400,6 +369,4 @@ echo "<br>----Num Found: " . $rss->numFound;
         scriptTag.parentNode.appendChild(e);
     } ());
 </script>
-
-
-</html> -->
+</html>

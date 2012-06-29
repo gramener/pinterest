@@ -94,7 +94,7 @@
         <div class="span6">
         <form action="showboards.php" method="get" name="facebook">
         <h3>Start tracking prices right away without registering!</h3>
-        Pinterest ID:<input type="text" name="pinid" class="input-xlarge" id="dd">
+        Pinterest ID:<input type="text" name="pinnerid" class="input-xlarge" id="dd">
         <br/>
          <button class="btn btn-primary">Start Tracking</button>
          </form>

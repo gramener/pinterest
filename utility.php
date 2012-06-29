@@ -5,6 +5,7 @@ include_once 'config.php';
 
 
 function ispinterestIdAvailable($pinid){
+	
 	$query="SELECT * FROM `tbl_userdetails` WHERE `pinnerID`='$pinid'";
 	$result=mysql_query($query);
 	if(mysql_num_rows($result)){
@@ -14,6 +15,80 @@ function ispinterestIdAvailable($pinid){
 	}
 }
 
+function checkExistingUser($email,$password){
+	
+	$query="SELECT * FROM `tbl_userdetails` WHERE `emailID`='$email' `password` ='" . md5($password) ."'";
+	$result=mysql_query($query);
+	return count(mysql_num_rows($result));
+	
+}
+
+
+function delatePinalertsbyPinIdandPinnersId($pinid,$pinnerid){
+	
+	$query="DELETE FROM `tbl_pinalerts` WHERE `pinID` = '$pinid' AND `pinnerID` = '$pinnerid'";
+	mysql_query($query);
+	
+}
+
+
+function getAllProductURL(){
+	$query="SELECT `productURL` FROM `tbl_pinalerts`";
+	$result=mysql_query($query);
+	$productURLArray=array();
+	while($tmp=mysql_fetch_array($result)){
+		$productURLArray[]=$tmp['productURL'];
+	}
+	return $productURLArray;
+}
+
+function getAllPinalerts(){
+	$query="SELECT * FROM `tbl_pinalerts` order by pinnerId";
+	$result=mysql_query($query);
+	$pinalertsArray=array();
+	
+	while($tmp=mysql_fetch_array($result)){
+		$pinalertsArray[$tmp['pinnerID']][]= array(
+				"URL"=>$tmp['productURL'],
+				"pinID"=>$tmp['pinID'],
+				"pinnerID"=>$tmp['pinnerID'],
+				"alertCreatedPrice"=>$tmp['alertCreatedPrice']				
+				);
+	}
+	return $pinalertsArray;
+}
+
+function sendCustomMail(){
+	
+}
+
+function getPinalertsByPinId($pinid){
+	$query="SELECT * FROM `tbl_pinalerts` WHERE `pinID`=" .$pinid;
+	$result=mysql_query($query);
+	return $result;
+}
+
+function getPinsByPinnerId($pinnerId){
+	$query="SELECT `pinID` FROM `tbl_pinalerts` WHERE `pinnerID`='$pinnerId' and `pinStatus`='y'";
+	$result=mysql_query($query);
+	$pinids=array();
+	while($tmp=mysql_fetch_array($result)){
+		$pinids[$tmp['pinID']]=$tmp['pinID'];
+	}
+	return $pinids;
+	
+}
+
+function addPinalerts($pinid,$pinnerId,$isProduct,$pinStatus,$alertSend,$alertCreatedPrice,$alertCreatedDate,$productURL){
+$query="INSERT INTO `db_pinalerts`.`tbl_pinalerts` (
+`pinID` ,`pinnerID` ,`isProduct` ,`pinStatus` ,
+`alertSent` ,`alertCreatedPrice` ,`alertCreatedDate` ,
+`productURL`)
+VALUES ('$pinid', '$pinnerId', '$isProduct', '$pinStatus', '$alertSend', '$alertCreatedPrice', '$alertCreatedDate', '$productURL')";
+
+mysql_query($query);
+
+}
 
 function insertRegistrationDetails($pinid,$email,$password){
 	$query= "INSERT INTO tbl_userdetails(pinnerID,registrationDate,alertThreshold,emailID,password)
@@ -22,8 +97,7 @@ function insertRegistrationDetails($pinid,$email,$password){
 }
 
 function getcountryCode($domain){
-	 $url = 'http://trends.google.com/websites?q='.$domain;
-	// Code for get all boards
+	/* $url = 'http://trends.google.com/websites?q='.$domain;
 	
 	$html = file_get_html($url);
 	$countryName=$html->find("div[class=trends-barchart-table-c]",0)->find("td[class=trends-barchart-name-cell]",0)->find("a",0)->plaintext;
@@ -33,8 +107,8 @@ function getcountryCode($domain){
 	}else{
 		return null;
 	
-	} 
-	//return "GB";
+	}  */
+	return "GB";
 }
 
 
@@ -51,6 +125,7 @@ function fetchGoogleAPIResults($urlString,$cc){
 	$apiEndPoint = 'https://www.googleapis.com/shopping/search/v1/public/products?';
 	$format = 'json';
 	$apiCall = $apiEndPoint . 'country=' . $cc . '&restrictBy=link:' . $urlString . '&key=' . $GOOGLE_API_KEY . '&fields=' . $fields . '&alt=' . $format;
+	echo $apiCall;
 	
 	return file_get_contents($apiCall);
 

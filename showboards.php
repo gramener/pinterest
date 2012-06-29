@@ -18,13 +18,15 @@ function getTextBetweenTags($string) {
 
 // End
 // Trim user ID
-if(isset($_SESSION['pinid'])){
-$userid= trim($_SESSION['pinid']);
-}else{
-	$userid=trim($_REQUEST['pinid']);
-}
+//if(isset($_SESSION['pinnerid'])){
+//$userid= trim($_SESSION['pinnerid']);
+//}else{
+	$userid=trim($_REQUEST['pinnerid']);
+//}
 
 $url = "http://pinterest.com/$userid/";
+
+echo $url;
 // Code for get all boards
 $html = file_get_html($url);
 $totalnumberofpage='';
@@ -128,19 +130,7 @@ for($i=1;$i<=$totalPages;$i++){
       });
 
 
-      function getproducts(str){
-    	  var arr=str.split('\/');
-    	  var url='getproductlist.php';
-    	  $("#products").text("");
-    	  $("#products").html('<img src="assets/img/spinner.gif" alt="Wait" align="middle" />');
-    	  $.getJSON(url+"?userid="+arr[1]+"&boardname="+arr[2],function(json){
-    	  $("#products").text("");
-    	  			$.each(json,function(i,tweet){
-    	  			   $("#product").append('<div id="bd" class="green">'+tweet[0]+'</div>');
-    	  			});
-    	  		});
-    	  }
-      
+     
     </script>
 <!--  Custom javascript for get pinners,getboards and getproducts -->
 </head>
