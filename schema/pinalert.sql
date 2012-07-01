@@ -3,11 +3,17 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jun 19, 2012 at 11:43 AM
--- Server version: 5.1.44
+-- Generation Time: Jul 01, 2012 at 11:35 AM
+-- Server version: 5.5.13
 -- PHP Version: 5.2.6
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
 
 --
 -- Database: `db_pinalerts`
@@ -74,7 +80,7 @@ CREATE TABLE IF NOT EXISTS `tbl_boardalerts` (
 --
 
 CREATE TABLE IF NOT EXISTS `tbl_pinalerts` (
-  `pinID` int(11) NOT NULL,
+  `pinID` varchar(50) NOT NULL,
   `pinnerID` varchar(256) NOT NULL,
   `isProduct` tinyint(1) NOT NULL,
   `pinStatus` char(1) NOT NULL,
@@ -88,6 +94,9 @@ CREATE TABLE IF NOT EXISTS `tbl_pinalerts` (
 -- Dumping data for table `tbl_pinalerts`
 --
 
+INSERT INTO `tbl_pinalerts` (`pinID`, `pinnerID`, `isProduct`, `pinStatus`, `alertSent`, `alertCreatedPrice`, `alertCreatedDate`, `productURL`) VALUES
+('56083957829850258', 'rockey_nebhwani', 1, 'y', 0, '10', '2012-07-01', 'http://direct.asda.com/Floral-Wall-Clock/001786219,default,pd.html#.T5wMONRqIN0.pinterest'),
+('56083957829868474', 'rockey_nebhwani', 1, 'y', 0, '20', '2012-07-01', 'http://direct.asda.com/Jones-Red-Wall-Clock/001765975,default,pd.html#.T6DxjeKOJvU.pinterest');
 
 -- --------------------------------------------------------
 
@@ -136,6 +145,8 @@ CREATE TABLE IF NOT EXISTS `tbl_userdetails` (
   `pinnerID` varchar(256) NOT NULL,
   `registrationDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `alertThreshold` int(11) DEFAULT '10',
+  `firstName` varchar(50) NOT NULL,
+  `lastName` varchar(50) NOT NULL,
   `emailID` varchar(50) NOT NULL,
   `password` varchar(50) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -144,8 +155,5 @@ CREATE TABLE IF NOT EXISTS `tbl_userdetails` (
 -- Dumping data for table `tbl_userdetails`
 --
 
-INSERT INTO `tbl_userdetails` (`pinnerID`, `registrationDate`, `alertThreshold`, `emailID`, `password`) VALUES
-('rockey', '2012-06-12 15:50:40', 10, 'rock', '5f4dcc3b5aa765d61d8327deb882cf99'),
-('dadad', '2012-06-12 16:01:53', 10, 'intranet@gfg.hg', 'eb9279982226a42afdf2860dbdc29b45'),
-('rockey_nebhwani', '2012-06-13 14:37:30', 10, 'jjss@sas.css', '437599f1ea3514f8969f161a6606ce18'),
-('rockey_nebhwani', '2012-06-19 16:11:03', 10, 'dsds@dsd.ff', 'f274a979296de5b2f82d4ad21e8409ed');
+INSERT INTO `tbl_userdetails` (`pinnerID`, `registrationDate`, `alertThreshold`, `firstName`, `lastName`, `emailID`, `password`) VALUES
+('rockey_nebhwani', '2012-07-01 16:37:56', 10, 'Jayaseelan', 'Gabriel', 'jayaseelan.gabriel@gmail.com', '55e60109f4844ad674609e9c40172530');
