@@ -1,9 +1,12 @@
 <?php
 
 include_once 'utility.php';
-$res=getAllPinalerts();
-foreach ($res as $k=>$v){
-	
-}
+
+
+$info=array();
+array_push($info,"email","jeyaseelan.g@gmail.com");
+array_push($info,"fname","jeyaseelan");
+array_push($info,"lname","gabriel");
+print_r($info);
 
 ?>

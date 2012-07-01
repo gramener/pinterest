@@ -23,10 +23,18 @@ session_start();
   	$pinnerid=trim($_POST['pinnerid']);
   	$email=trim($_POST['email']);
   	$password=trim($_POST['password']);
+  	$fname=trim($_POST['fname']);
+  	$lname=trim($_POST['lname']);
   	$errors=validateRegistration($pinnerid, $email, $password);
+  	if(empty($lname)){
+  		$error[7]=7;
+  	}
+  	if(empty($fname)){
+  		$error[6]=6;
+  	}
   	
   	if(count($errors)==0){
-  		$res=insertRegistrationDetails($pinnerid, $email, $password);
+  		$res=insertRegistrationDetails($pinnerid, $email, $password,$fname,$lname);
   		$_SESSION['pinnerid']=$pinnerid;
   		$_SESSION['email']=$email;
   		$_SESSION['auth']=true;
@@ -152,6 +160,34 @@ session_start();
             ?>
             </div>
           </div>
+          
+           <div class="control-group">
+            <label for="input01" class="control-label">First Name</label>
+            <div class="controls">
+              <input type="text" id="email" name="fname" class="input-xlarge">
+            </div>
+             <?php 
+             if(array_key_exists('6',$errors) && $loginType==1){
+             echo '<font color=red>' . $errorKeys[6] . '</font>';
+             }
+            
+            ?>
+          </div>
+          
+           <div class="control-group">
+            <label for="input01" class="control-label">Last Name</label>
+            <div class="controls">
+              <input type="text" id="email" name="lname" class="input-xlarge">
+            </div>
+             <?php 
+             if(array_key_exists('6',$errors) && $loginType==1){
+             echo '<font color=red>' . $errorKeys[7] . '</font>';
+             }
+            
+            ?>
+          </div>
+          
+          
           <div class="control-group">
             <label for="input01" class="control-label">Email</label>
             <div class="controls">

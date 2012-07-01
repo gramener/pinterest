@@ -15,6 +15,19 @@ function ispinterestIdAvailable($pinid){
 	}
 }
 
+function getuserDetailsByPinnerId($pinnerid){
+	$query="SELECT * FROM `tbl_userdetails` WHERE `pinnerID`='$pinnerid'";
+	$result=mysql_query($query);
+	$details=array();
+	while($tmp=mysql_fetch_array($result)){
+		$details['EMAIL']=$tmp['emailID'];
+		$details['FNAME']=$tmp['firstName'];
+		$details['LANME']=$tmp['lastName'];
+	}
+	
+	return $details;
+}
+
 function checkExistingUser($email,$password){
 	
 	$query="SELECT * FROM `tbl_userdetails` WHERE `emailID`='$email' `password` ='" . md5($password) ."'";
@@ -90,9 +103,9 @@ mysql_query($query);
 
 }
 
-function insertRegistrationDetails($pinid,$email,$password){
-	$query= "INSERT INTO tbl_userdetails(pinnerID,registrationDate,alertThreshold,emailID,password)
-			VALUES ( '$pinid', CURRENT_TIMESTAMP , '10', '$email', MD5( '$password' ))";
+function insertRegistrationDetails($pinid,$email,$password,$fname,$lname){
+	$query= "INSERT INTO tbl_userdetails(pinnerID,registrationDate,alertThreshold,firstName,lastName,emailID,password)
+			VALUES ( '$pinid', CURRENT_TIMESTAMP , '10', '$fname','$lname','$email', MD5( '$password' ))";
 	$result=mysql_query($query);
 }
 
@@ -125,7 +138,7 @@ function fetchGoogleAPIResults($urlString,$cc){
 	$apiEndPoint = 'https://www.googleapis.com/shopping/search/v1/public/products?';
 	$format = 'json';
 	$apiCall = $apiEndPoint . 'country=' . $cc . '&restrictBy=link:' . $urlString . '&key=' . $GOOGLE_API_KEY . '&fields=' . $fields . '&alt=' . $format;
-	echo $apiCall;
+	//echo $apiCall;
 	
 	return file_get_contents($apiCall);
 
