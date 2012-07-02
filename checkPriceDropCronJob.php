@@ -5,18 +5,12 @@ include_once 'mailchimpAPI.php';
 
 $cleanURLSring='';
 $flag=0;
-
-
+// Get all records from pin alert table. The results are grouped by pinners id
 $allAlerts=getAllPinalerts();
-
 foreach ($allAlerts as $k=>$v){
-	
 	// $k represent user id 
 	// get user details
-	echo "user id" . $k;
 	$userDetails=getuserDetailsByPinnerId($k);
-	print_r($userDetails);
-	
 	/*
 	 * User Attribute
 	 * pinnerID 	registrationDate 	alertThreshold 	firstName 	lastName 	emailID 
@@ -46,6 +40,9 @@ foreach ($allAlerts as $k=>$v){
 	$pinsArray=array();
 	
 	foreach($productURLs as $productURL){
+		echo "<br>Product url";
+		echo $productURL;
+		echo "<br>";
 		$tempurl=explode("#",$productURL);
 		if(count($tempurl)==1){
 			$tempurl=explode("?",$productURL);
@@ -54,6 +51,9 @@ foreach ($allAlerts as $k=>$v){
 		$productIndividualPrice=getProductPrice($linkArray, $tempurl[0]);
 		if($productIndividualPrice<$alertCreatedPrice[$i] && $productIndividualPrice!=''){
 		$pinsArray[]=array("URL"=>$productURL,"WPRICE"=>$alertCreatedPrice[$i],"NPRICE"=>$productIndividualPrice);
+		echo "<br>";
+		print_r($pinsArray);
+		echo "<br>";
 		}
 		$i++;
 }
