@@ -2,11 +2,14 @@
 
 include_once 'utility.php';
 
+class test{
+	var $hello="helloo";
+	function say(){
+		echo $this->hello;
+	}
+}
 
-$info=array();
-array_push($info,"email","jeyaseelan.g@gmail.com");
-array_push($info,"fname","jeyaseelan");
-array_push($info,"lname","gabriel");
-print_r($info);
+$t=new test();
+$t->say();
 
 ?>

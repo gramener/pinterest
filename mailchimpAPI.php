@@ -47,14 +47,15 @@ function MC_batchSubscribe($userDetails,$pins){
 	
 	$batch=array();
 	foreach ($subscriberList as $s){
-		$batch[]=array("EMAIL"=>$s,"ALERTSEND"=>"false");
+		$batch[]=array("EMAIL"=>$s,"ALERTSEND"=>"false","PIN1URL"=>"","PIN1WPRICE"=>"","PIN1NPRICE"=>"","PIN2URL"=>"","PIN2WPRICE"=>"","PIN2NPRICE"=>"","PIN3URL"=>"","PIN3WPRICE"=>"","PIN3NPRICE"=>"","PIN4URL"=>"","PIN4WPRICE"=>"","PIN4NPRICE"=>"","PIN5URL"=>"","PIN5WPRICE"=>"","PIN5NPRICE"=>"","PIN6URL"=>"","PIN6WPRICE"=>"","PIN6NPRICE"=>"","PIN7URL"=>"","PIN7WPRICE"=>"","PIN7NPRICE"=>"","PIN8URL"=>"","PIN8WPRICE"=>"","PIN8NPRICE"=>"","PIN9URL"=>"","PIN9WPRICE"=>"","PIN9NPRICE"=>"","PIN10URL"=>"","PIN10WPRICE"=>"","PIN10NPRICE"=>"");
+		
 	}
 	
 	
 	$optin = false; //yes, send optin emails
 	$up_exist = true; // yes, update currently subscribed users
 	$replace_int = false; // no, add interest, don't replace
-	
+	//Update all entries with Empty value
 	$vals = $api->listBatchSubscribe($listId,$batch,$optin, $up_exist, $replace_int);
 		
 	$email=$userDetails['EMAIL'];
