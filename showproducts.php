@@ -7,6 +7,7 @@ session_start();
 */
 //error_reporting(0);
 require_once 'simple_html_dom.php';
+include_once 'constants.php';
 include_once 'utility.php';
 
 function getTextBetweenTags($string) {
@@ -68,9 +69,7 @@ for($i=1;$i<=$totalPages;$i++){
 		
 		//$cleanURLs = cleanProductURLs($productURL) . "#" . getcountryCode($productDomain);;
 		$cleanURLs = cleanProductURLs($productURL);
-		
 		// Created an based on locale. Same locale products were saved in single array element. 
-		
 		if(isset($urls[getcountryCode($productDomain)])){
 		$urls[getcountryCode($productDomain)]= $urls[getcountryCode($productDomain)] ."|" . $cleanURLs;
 		}else{
@@ -89,16 +88,12 @@ $results= fetchGoogleAPIResults($v,$k);
 }
 //$results = fetchGoogleAPIResults($urlString);
 /* Decode JSON object returned by Google API */
-
 $obj = json_decode($results,true);
 
-
 $total_price=0;
-foreach(search($obj, "price") as $price){
+/* foreach(search($obj, "price") as $price){
 	$total_price=$total_price+$price['price'];
-}
-
-
+} */
 $linkArray=search($obj, "link");
 //print_r($linkArray);
 
@@ -133,6 +128,24 @@ echo "<br>----Num Found: " . $rss->numFound;
         <script src="http://passets-cdn.pinterest.com/js/bundle_pin_4d500df1.js" type="text/javascript" charset="utf-8"></script>
 
     </head>
+    
+    <script type="text/javascript">
+	function addall(){
+
+		var url="showindividualProduct.php?"
+		for(var i=0;i<document.productform.length;i++){
+			url+="pinid[]="+document.productform[i].pinid.value+"&";
+			url+="pinnerId[]="+document.productform[i].pinnerId.value+"&";
+			url+="id[]="+document.productform[i].id.value+"&";
+			url+="currentPrice[]="+document.productform[i].currentPrice.value+"&";
+			url+="productURL[]="+document.productform[i].productURL.value+"&";
+			}
+		url+="addall=yes";
+
+		document.location.href=url;
+		
+	}
+    </script>
     
 <body>
 
@@ -178,8 +191,9 @@ echo "<br>----Num Found: " . $rss->numFound;
 			<div id="BoardUsers">
 				<a href="#/<?php echo $userid;?>/" class="ImgLink"></a>
 				<span id="BoardUserName"><?php echo $userid;?></span>
+				<input type="button" name="addall" value="Add All" onclick="addall();"/>
 			</div>
-			<div id="BoardStats"><strong>Total price of Products: <?php echo $total_price;?> GBP</strong>
+			<div id="BoardStats"><strong>Total price of Products: <span id="total_price">&nbsp;</span></strong>
 			</div>
 			<div id="BoardButton">
 			</div>
@@ -202,12 +216,12 @@ echo "<br>----Num Found: " . $rss->numFound;
        	
 
        	
-       	$productIndividualPrice=getProductPrice($linkArray, $tempurl[0]);
-
+       	$productIndividualPrice=getProductPrice($linkArray, $tempurl[0],$PRICETRACKING);
+       	$total_price=$total_price+$productIndividualPrice;
 		if($productIndividualPrice!=''){
 			
 ?>
-	<form action="showindividualProduct.php" method="get">
+	<form action="showindividualProduct.php" method="get" name="productform">
     <div class="pin" data-id="<?php echo $r[4];?>" data-width="600" data-height="800">
         <div class="PinHolder">
             <div class="actions">
@@ -265,6 +279,13 @@ echo "<br>----Num Found: " . $rss->numFound;
 <div id="LoadingPins"><img src="http://passets-cdn.pinterest.com/images/BouncingLoader.gif" alt="Pin Loader Image" /><span>Fetching pins&hellip;</span></div>
 </div>
 </body>
+
+<script type="text/javascript">
+
+ document.getElementById('total_price').innerHTML='<?php echo $total_price;?>' + " GBP";
+
+ </script>
+
 
 <script type="text/javascript">
     var board = 56084026548592326;

@@ -3,9 +3,29 @@
 require_once 'simple_html_dom.php';
 include_once 'config.php';
 
+function getProductIdfromURL($url){
+		
+		preg_match_all('!/\d+,!', $url, $matches);
+		if(isset($matches[0][0])){
+	    return str_replace(array(",","/"),"",$matches[0][0]);
+		}else{
+			return null;
+		}
+	
+}
+
+
+function  getPricebyProductID($pid){
+	
+	$query="SELECT * FROM `pt_products` WHERE `buy_url` like '%$pid%'";
+	$result=mysql_query($query);
+	while($tmp=mysql_fetch_array($result)){
+		return $tmp['price'];
+	}
+	
+}
 
 function ispinterestIdAvailable($pinid){
-	
 	$query="SELECT * FROM `tbl_userdetails` WHERE `pinnerID`='$pinid'";
 	$result=mysql_query($query);
 	if(mysql_num_rows($result)){
@@ -138,7 +158,7 @@ function fetchGoogleAPIResults($urlString,$cc){
 	$apiEndPoint = 'https://www.googleapis.com/shopping/search/v1/public/products?';
 	$format = 'json';
 	$apiCall = $apiEndPoint . 'country=' . $cc . '&restrictBy=link:' . $urlString . '&key=' . $GOOGLE_API_KEY . '&fields=' . $fields . '&alt=' . $format;
-	echo "<br><br><br><br>".$apiCall;
+	//echo "<br><br><br><br>".$apiCall;
 	
 	return file_get_contents($apiCall);
 
@@ -160,18 +180,27 @@ function cleanProductURLs($productURL){
 	return $url;
 }
 
-function getProductPrice($array,$productURL){
+function getProductPrice($array,$productURL,$type){
+	
+	if($type=="P"){
+		$pid=getProductIdfromURL($productURL);
+		if($pid!=null){
+			return getPricebyProductID($pid);
+		}else{
+			return '';
+		}
+		
+	}
 
+	if($type=="G"){
 	foreach ($array as $tmp){
 	 $tt= explode("?",$tmp['link']);
-	
-	 
 	 if($tt[0]==$productURL){
 	 	return $tmp['inventories'][0]['price'];
 	 }
 	}
 	return '';
-	
+	}
 }
 
 

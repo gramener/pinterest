@@ -10,19 +10,14 @@ $_SESSION['id']=$id;
 }
 
 if(isset($_SESSION['auth']) && isset($_REQUEST['currentPrice'])){
-	
-	
-	
 	$_SESSION['pinid']=$_REQUEST['pinid'];
 	$_SESSION['pinnerid']=$_REQUEST['pinnerId'];
 	$id=$_REQUEST['id'];
-	
 }
 
 if(isset($_REQUEST['currentPrice'])){
 	$currentPrice=$_REQUEST['currentPrice'];
 	$_SESSION['currentPrice']=$currentPrice;
-
 }
 
 if(isset($_REQUEST['rfa'])){
@@ -39,7 +34,6 @@ if(isset($_REQUEST['productURL'])){
 }
 
 
-
 if(!isset($_SESSION['pinnerid'])&& !isset($_SESSION['email'])){
 	header("Location: alertRegistration.php?pinid=$pinid&pinnerId=$pinnerId");
 	return;
@@ -51,7 +45,7 @@ if(!isset($_SESSION['pinnerid'])&& !isset($_SESSION['email'])){
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Value Clocks</title>
+        <title></title>
         
         <link rel="icon" href="http://passets-cdn.pinterest.com/images/favicon.png" type="image/x-icon" />
         <link rel="apple-touch-icon-precomposed" href="http://passets-cdn.pinterest.com/images/ipad_touch_icon.png" />

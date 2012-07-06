@@ -1,15 +1,12 @@
 <?php
 
 include_once 'utility.php';
+include_once 'config.php';
 
-class test{
-	var $hello="helloo";
-	function say(){
-		echo $this->hello;
-	}
-}
 
-$t=new test();
-$t->say();
+print_r($_GET['p']);
+
+
+
 
 ?>
