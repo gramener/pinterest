@@ -1,12 +1,29 @@
 <?php
 include_once 'utility.php';
+
 session_start();
+
+
+
+if(isset($_SESSION['email'])){
+	echo "Email True <br>";
+}else{
+	echo "Email False <br>";
+}
+if(isset($_SESSION['pinnerid'])){
+	echo "Pinner Id True <br>";
+}else{
+	echo "Pinner Id False <br>";
+}
+
+
 
 if(!isset($_REQUEST['auth'])){
 $pinid=$_REQUEST['pinid'];
 $pinnerId=$_REQUEST['pinnerId'];
 $id=$_REQUEST['id'];
 $_SESSION['id']=$id;
+$_SESSION['pinid']=$pinid;
 }
 
 if(isset($_SESSION['auth']) && isset($_REQUEST['currentPrice'])){
@@ -22,8 +39,10 @@ if(isset($_REQUEST['currentPrice'])){
 
 if(isset($_REQUEST['rfa'])){
 	$_SESSION['requestType']="rfa";
-}else{
+}if(isset($_REQUEST['ata'])){
 	$_SESSION['requestType']="ata";
+}else{
+	$_SESSION['requestType']="addall";
 }
 
 
@@ -34,9 +53,10 @@ if(isset($_REQUEST['productURL'])){
 }
 
 
-if(!isset($_SESSION['pinnerid'])&& !isset($_SESSION['email'])){
-	header("Location: alertRegistration.php?pinid=$pinid&pinnerId=$pinnerId");
+if(!isset($_SESSION['email'])){
+	header("Location: alertRegistration.php?pinnerId=$pinnerId");
 	return;
+	
 }
 
 ?>
@@ -89,6 +109,21 @@ if(!isset($_SESSION['pinnerid'])&& !isset($_SESSION['email'])){
 
 <?php 
 
+if($_SESSION['requestType']=='addall'){
+
+$i=0;
+$curDate=date('Y-m-d');
+foreach($_SESSION['productURL'] as $p){
+	
+	
+	duplicateUpdatePinalerts($_SESSION['pinid'][$i], $_SESSION['pinnerid'], "1", "y", "0", $_SESSION['currentPrice'][$i], $curDate, $p);
+	
+	echo "New product addded into DB";
+	
+	
+	$i++;
+}
+}
 
 if($_SESSION['requestType']=='ata'){
 

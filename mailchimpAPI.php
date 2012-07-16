@@ -4,7 +4,6 @@ require_once 'inc/MCAPI.class.php';
 require_once 'inc/config.inc.php';
 
 function MC_batchSubscribe($userDetails,$pins){
-	
 	// Configuration Values
 	//API Key - see http://admin.mailchimp.com/account/api
 	$apikey = '61b57fe45c3f7d8503f7f66d639dbf07-us5';
@@ -20,14 +19,11 @@ function MC_batchSubscribe($userDetails,$pins){
 	$boss_man_email = 'rockey.nebhwani@leapgradient.com';
 	//just used in xml-rpc examples
 	$apiUrl = 'http://api.mailchimp.com/1.3/';
-	
 	$api = new MCAPI($apikey);
-
 	/*
 	 * GET all members info from subscription List
 	 * START BLOCK
 	 */
-	
 	$subscriberList=array();
 	$retval = $api->listMembers($listId, 'subscribed', null, 0, 5000 );
 	if ($api->errorCode){
@@ -48,20 +44,15 @@ function MC_batchSubscribe($userDetails,$pins){
 	$batch=array();
 	foreach ($subscriberList as $s){
 		$batch[]=array("EMAIL"=>$s,"ALERTSEND"=>"false","PIN1URL"=>"","PIN1WPRICE"=>"","PIN1NPRICE"=>"","PIN2URL"=>"","PIN2WPRICE"=>"","PIN2NPRICE"=>"","PIN3URL"=>"","PIN3WPRICE"=>"","PIN3NPRICE"=>"","PIN4URL"=>"","PIN4WPRICE"=>"","PIN4NPRICE"=>"","PIN5URL"=>"","PIN5WPRICE"=>"","PIN5NPRICE"=>"","PIN6URL"=>"","PIN6WPRICE"=>"","PIN6NPRICE"=>"","PIN7URL"=>"","PIN7WPRICE"=>"","PIN7NPRICE"=>"","PIN8URL"=>"","PIN8WPRICE"=>"","PIN8NPRICE"=>"","PIN9URL"=>"","PIN9WPRICE"=>"","PIN9NPRICE"=>"","PIN10URL"=>"","PIN10WPRICE"=>"","PIN10NPRICE"=>"");
-		
 	}
-	
-	
 	$optin = false; //yes, send optin emails
 	$up_exist = true; // yes, update currently subscribed users
 	$replace_int = false; // no, add interest, don't replace
 	//Update all entries with Empty value
 	$vals = $api->listBatchSubscribe($listId,$batch,$optin, $up_exist, $replace_int);
-		
 	$email=$userDetails['EMAIL'];
 	$fname=$userDetails['FNAME'];
 	$lname=$userDetails['LNAME'];
-	
 	$batch=array();
 	$info=array();
 	$info["EMAIL"]=$email;

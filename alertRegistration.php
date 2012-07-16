@@ -11,11 +11,11 @@ session_start();
  $password="";
  $errorKeys = parse_ini_file("error.ini");
  
- if(!isset($_SESSION['pinnerid']) && !isset($_SESSION['pinid'])){
- $pinId=$_GET['pinid'];
+ if(!isset($_SESSION['pinnerid'])){
+ 
  $pinnerId=$_GET['pinnerId'];
  $_SESSION['pinnerid']=$pinnerId;
- $_SESSION['pinid']=$pinId;
+ 
  }
  $loginType="0";
   if(isset($_POST['pinnerid'])){
@@ -35,6 +35,7 @@ session_start();
   	
   	if(count($errors)==0){
   		$res=insertRegistrationDetails($pinnerid, $email, $password,$fname,$lname);
+  		
   		$_SESSION['pinnerid']=$pinnerid;
   		$_SESSION['email']=$email;
   		$_SESSION['auth']=true;

@@ -15,6 +15,16 @@ function getProductIdfromURL($url){
 }
 
 
+function duplicateUpdatePinalerts($pinid,$pinnerid,$isproduct,$pinstatus,$alertSend,$alertCreatedPrice,$alertCreatedDate,$productURL){
+	$query="INSERT INTO tbl_pinalerts (`pinID`,`pinnerID`,`isProduct`,
+			`pinStatus`,`alertSent`,`alertCreatedPrice`,`alertCreatedDate`,`productURL`) 
+			VALUES ('$pinid','$pinnerid','$isproduct','$pinstatus','$alertSend','$alertCreatedPrice','$alertCreatedDate','$productURL') ON DUPLICATE KEY UPDATE 
+			`alertCreatedPrice`='$alertCreatedPrice',`alertCreatedDate`='$alertCreatedDate',`productURL`='$productURL'";
+	echo "<br> " . $query;
+	mysql_query($query);
+}
+
+
 function  getPricebyProductID($pid){
 	
 	$query="SELECT * FROM `pt_products` WHERE `buy_url` like '%$pid%'";
@@ -37,12 +47,16 @@ function ispinterestIdAvailable($pinid){
 
 function getuserDetailsByPinnerId($pinnerid){
 	$query="SELECT * FROM `tbl_userdetails` WHERE `pinnerID`='$pinnerid'";
+	echo "$query";
 	$result=mysql_query($query);
+	
+	
+	
 	$details=array();
 	while($tmp=mysql_fetch_array($result)){
 		$details['EMAIL']=$tmp['emailID'];
 		$details['FNAME']=$tmp['firstName'];
-		$details['LANME']=$tmp['lastName'];
+		$details['LNAME']=$tmp['lastName'];
 	}
 	
 	return $details;
@@ -126,6 +140,7 @@ mysql_query($query);
 function insertRegistrationDetails($pinid,$email,$password,$fname,$lname){
 	$query= "INSERT INTO tbl_userdetails(pinnerID,registrationDate,alertThreshold,firstName,lastName,emailID,password)
 			VALUES ( '$pinid', CURRENT_TIMESTAMP , '10', '$fname','$lname','$email', MD5( '$password' ))";
+	
 	$result=mysql_query($query);
 }
 

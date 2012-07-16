@@ -83,20 +83,24 @@ for($i=1;$i<=$totalPages;$i++){
 /* Convert URL array in PIPE delimited string. This is needed to pass this to Google API */
 //$urlString = implode('|',$urls);
 /* Google API will return JSON object */
+if($PRICETRACKING=="G"){
 foreach ($urls as $k=>$v){
 $results= fetchGoogleAPIResults($v,$k);
 }
 //$results = fetchGoogleAPIResults($urlString);
 /* Decode JSON object returned by Google API */
 $obj = json_decode($results,true);
-
-$total_price=0;
 /* foreach(search($obj, "price") as $price){
 	$total_price=$total_price+$price['price'];
 } */
 $linkArray=search($obj, "link");
 //print_r($linkArray);
+}else{
+	$linkArray=array();
+}
 
+
+$total_price=0;
 
 //header('Content-type: application/json');
 //echo json_encode($rs);
@@ -135,12 +139,12 @@ echo "<br>----Num Found: " . $rss->numFound;
 		var url="showindividualProduct.php?"
 		for(var i=0;i<document.productform.length;i++){
 			url+="pinid[]="+document.productform[i].pinid.value+"&";
-			url+="pinnerId[]="+document.productform[i].pinnerId.value+"&";
-			url+="id[]="+document.productform[i].id.value+"&";
+			url+="pinnerId="+document.productform[i].pinnerId.value+"&";
+			url+="id="+document.productform[i].id.value+"&";
 			url+="currentPrice[]="+document.productform[i].currentPrice.value+"&";
-			url+="productURL[]="+document.productform[i].productURL.value+"&";
+			url+="productURL[]="+encodeURIComponent(document.productform[i].productURL.value)+"&";
 			}
-		url+="addall=yes";
+		url+="requestType=addall";
 
 		document.location.href=url;
 		
