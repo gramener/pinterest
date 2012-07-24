@@ -1,23 +1,7 @@
 <?php
+error_reporting(0);
 include_once 'utility.php';
-
 session_start();
-
-
-
-if(isset($_SESSION['email'])){
-	echo "Email True <br>";
-}else{
-	echo "Email False <br>";
-}
-if(isset($_SESSION['pinnerid'])){
-	echo "Pinner Id True <br>";
-}else{
-	echo "Pinner Id False <br>";
-}
-
-
-
 if(!isset($_REQUEST['auth'])){
 $pinid=$_REQUEST['pinid'];
 $pinnerId=$_REQUEST['pinnerId'];
@@ -25,34 +9,26 @@ $id=$_REQUEST['id'];
 $_SESSION['id']=$id;
 $_SESSION['pinid']=$pinid;
 }
-
 if(isset($_SESSION['auth']) && isset($_REQUEST['currentPrice'])){
 	$_SESSION['pinid']=$_REQUEST['pinid'];
 	$_SESSION['pinnerid']=$_REQUEST['pinnerId'];
 	$id=$_REQUEST['id'];
 }
-
 if(isset($_REQUEST['currentPrice'])){
 	$currentPrice=$_REQUEST['currentPrice'];
 	$_SESSION['currentPrice']=$currentPrice;
 }
-
 if(isset($_REQUEST['rfa'])){
 	$_SESSION['requestType']="rfa";
 }if(isset($_REQUEST['ata'])){
 	$_SESSION['requestType']="ata";
-}else{
+}if(isset($_REQUEST['requestType'])){
 	$_SESSION['requestType']="addall";
 }
-
-
 if(isset($_REQUEST['productURL'])){
 	$productURL=$_REQUEST['productURL'];
 	$_SESSION['productURL']=$productURL;
-	
 }
-
-
 if(!isset($_SESSION['email'])){
 	header("Location: alertRegistration.php?pinnerId=$pinnerId");
 	return;
@@ -123,6 +99,7 @@ foreach($_SESSION['productURL'] as $p){
 	
 	$i++;
 }
+echo "New products addded into DB<br>";
 }
 
 if($_SESSION['requestType']=='ata'){
@@ -133,7 +110,7 @@ $currentPrice=$_SESSION['currentPrice'];
 $alertCreatedDate=date('Y-m-d');
 $productURL=$_SESSION['productURL'];
 addPinalerts("$pinid", "$pinnerId", "1", "y", "0", "$currentPrice", $alertCreatedDate, "$productURL");
-echo "Your product addded into our database..";
+echo "Your product addded into our database..<br>";
 
 ?>
 
@@ -145,7 +122,7 @@ if($_SESSION['requestType']=='rfa'){
 	$pinid=$_SESSION['pinid'];
 	$pinnerId=$_SESSION['pinnerid'];
 	delatePinalertsbyPinIdandPinnersId($pinid,$pinnerId);
-	echo "Product remove from our database...";
+	echo "Product remove from our database...<br>";
 }
 ?>
 

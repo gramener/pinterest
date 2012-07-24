@@ -4,14 +4,12 @@ require_once 'simple_html_dom.php';
 include_once 'config.php';
 
 function getProductIdfromURL($url){
-		
 		preg_match_all('!/\d+,!', $url, $matches);
 		if(isset($matches[0][0])){
 	    return str_replace(array(",","/"),"",$matches[0][0]);
 		}else{
 			return null;
 		}
-	
 }
 
 
@@ -20,7 +18,7 @@ function duplicateUpdatePinalerts($pinid,$pinnerid,$isproduct,$pinstatus,$alertS
 			`pinStatus`,`alertSent`,`alertCreatedPrice`,`alertCreatedDate`,`productURL`) 
 			VALUES ('$pinid','$pinnerid','$isproduct','$pinstatus','$alertSend','$alertCreatedPrice','$alertCreatedDate','$productURL') ON DUPLICATE KEY UPDATE 
 			`alertCreatedPrice`='$alertCreatedPrice',`alertCreatedDate`='$alertCreatedDate',`productURL`='$productURL'";
-	echo "<br> " . $query;
+
 	mysql_query($query);
 }
 
@@ -47,7 +45,7 @@ function ispinterestIdAvailable($pinid){
 
 function getuserDetailsByPinnerId($pinnerid){
 	$query="SELECT * FROM `tbl_userdetails` WHERE `pinnerID`='$pinnerid'";
-	echo "$query";
+	
 	$result=mysql_query($query);
 	
 	
@@ -127,7 +125,7 @@ function getPinsByPinnerId($pinnerId){
 }
 
 function addPinalerts($pinid,$pinnerId,$isProduct,$pinStatus,$alertSend,$alertCreatedPrice,$alertCreatedDate,$productURL){
-$query="INSERT INTO `db_pinalerts`.`tbl_pinalerts` (
+$query="INSERT INTO `tbl_pinalerts` (
 `pinID` ,`pinnerID` ,`isProduct` ,`pinStatus` ,
 `alertSent` ,`alertCreatedPrice` ,`alertCreatedDate` ,
 `productURL`)

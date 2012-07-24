@@ -1,21 +1,15 @@
 <?php 
+error_reporting(0);
 include_once 'utility.php';
 session_start();
-
-?>
-
-<?php 
  $errors=array();
  $pinid="";
  $email="";
  $password="";
  $errorKeys = parse_ini_file("error.ini");
- 
  if(!isset($_SESSION['pinnerid'])){
- 
  $pinnerId=$_GET['pinnerId'];
  $_SESSION['pinnerid']=$pinnerId;
- 
  }
  $loginType="0";
   if(isset($_POST['pinnerid'])){
@@ -32,17 +26,14 @@ session_start();
   	if(empty($fname)){
   		$error[6]=6;
   	}
-  	
   	if(count($errors)==0){
   		$res=insertRegistrationDetails($pinnerid, $email, $password,$fname,$lname);
-  		
   		$_SESSION['pinnerid']=$pinnerid;
   		$_SESSION['email']=$email;
   		$_SESSION['auth']=true;
-  		header("Location: showindividualProduct.php?auth=true");
+  		header("Location: showindividualproduct.php?auth=true");
   	}
   }
-  
   $message="";
   if(isset($_POST['existinguser'])){
   	$loginType=2;
@@ -52,14 +43,11 @@ session_start();
   	if(checkExistingUser($email, $password) && count($errors)==0){
   	$_SESSION['email']=$email;
   	$_SESSION['auth']=true;
-  	header("Location: showindividualProduct.php?auth=true");
+  	header("Location: showindividualproduct.php?auth=true");
   }else{
   	$message="Invalid username/password";
   }
-  	
   }
-  
-  
   ?>
   
  

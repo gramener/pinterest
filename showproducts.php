@@ -1,4 +1,5 @@
 <?php
+error_reporting(0);
 session_start();
 /*
  * author: Jayaseelan Gabriel
@@ -131,26 +132,54 @@ echo "<br>----Num Found: " . $rss->numFound;
         <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
         <script src="http://passets-cdn.pinterest.com/js/bundle_pin_4d500df1.js" type="text/javascript" charset="utf-8"></script>
 
-    </head>
+ 
     
-    <script type="text/javascript">
-	function addall(){
+<script type="text/javascript">
+function addall(){
+	alert("hai");
+ var form = document.createElement("form");
+ form.setAttribute("method", "post");
+ form.setAttribute("action", "showindividualproduct.php");
+ for(var i=0;i<document.productform.length;i++){
+	 var hiddenFieldPinId = document.createElement("input");              
+	 hiddenFieldPinId.setAttribute("name", "pinid[]");
+	 hiddenFieldPinId.setAttribute("value", document.productform[i].pinid.value);
+	 form.appendChild(hiddenFieldPinId);
 
-		var url="showindividualProduct.php?"
-		for(var i=0;i<document.productform.length;i++){
-			url+="pinid[]="+document.productform[i].pinid.value+"&";
-			url+="pinnerId="+document.productform[i].pinnerId.value+"&";
-			url+="id="+document.productform[i].id.value+"&";
-			url+="currentPrice[]="+document.productform[i].currentPrice.value+"&";
-			url+="productURL[]="+encodeURIComponent(document.productform[i].productURL.value)+"&";
-			}
-		url+="requestType=addall";
+	 var hiddenFieldPinerId = document.createElement("input");              
+	 hiddenFieldPinerId.setAttribute("name", "pinnerId");
+	 hiddenFieldPinerId.setAttribute("value", document.productform[i].pinnerId.value);
+	 form.appendChild(hiddenFieldPinerId);
 
-		document.location.href=url;
+	 var hiddenFieldId = document.createElement("input");              
+	 hiddenFieldId.setAttribute("name", "id");
+	 hiddenFieldId.setAttribute("value", document.productform[i].id.value);
+	 form.appendChild(hiddenFieldId);
+
+	 var hiddenFieldcurrentPrice = document.createElement("input");              
+	 hiddenFieldcurrentPrice.setAttribute("name", "currentPrice[]");
+	 hiddenFieldcurrentPrice.setAttribute("value", document.productform[i].currentPrice.value);
+	 form.appendChild(hiddenFieldcurrentPrice);
+
+	 var hiddenFieldproductURL = document.createElement("input");              
+	 hiddenFieldproductURL.setAttribute("name", "productURL[]");
+	 hiddenFieldproductURL.setAttribute("value",encodeURIComponent(document.productform[i].productURL.value));
+	 form.appendChild(hiddenFieldproductURL);
+	 
+ }
+ 
+ var ReqType = document.createElement("input");              
+ ReqType.setAttribute("name", "requestType");
+ ReqType.setAttribute("value","addall");
+ form.appendChild(ReqType);
+ document.body.appendChild(form);
+ 
+ form.submit();
 		
+
 	}
     </script>
-    
+  </head>  
 <body>
 
 	
@@ -225,7 +254,7 @@ echo "<br>----Num Found: " . $rss->numFound;
 		if($productIndividualPrice!=''){
 			
 ?>
-	<form action="showindividualProduct.php" method="get" name="productform">
+	<form action="showindividualproduct.php" method="post" name="productform">
     <div class="pin" data-id="<?php echo $r[4];?>" data-width="600" data-height="800">
         <div class="PinHolder">
             <div class="actions">
